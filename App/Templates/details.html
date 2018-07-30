@@ -1,0 +1,46 @@
+<div ng-if="modalData != undefined">
+    <h1 class="heading--red">{{modalData.name}}</h1>
+
+    <div class="main-content book-detail">
+        <section class="row">
+            <div class="col-10-md col-md-offset-2">
+                <section class="row">
+                    <div class="col-3-md">
+                        <div class="book-image">
+                            <img ng-if="modalData.labels!=undefined" ng-src="{{modalData.labels.medium}}"/>
+                            <img ng-if="modalData.labels==undefined" ng-src="Build/Images/beer-default.png"/>
+                        </div>
+                    </div>
+                    <div class="col-8-md">
+                        <div class="book-container">
+                            <div class="author-txt">
+                                <span>{{details.volumeInfo.authors.join(',')}}</span>
+                            </div>
+                            <div class="Publication">
+                                <span class="publication-txt">{{details.volumeInfo.publisher}}, {{details.volumeInfo.publishedDate}}</span>
+                                <br/><br/>
+                                <span ng-if="details.volumeInfo.categories" class="genre"><b>Genre</b>: {{details.volumeInfo.categories.join(',')}}</span>
+                                <br/>
+                                <span class="pages"><b>Pages</b>: {{details.volumeInfo.pageCount}}</span>
+                            </div>
+                            <div class="ratings">
+                                <span class="ratings-txt"></span>
+                            </div>
+                            <br/>
+
+                            <div ng-if="modalData.description" class="description">
+                                <h4>Description</h4>
+                                <span class="description-txt" >{{modalData.description}}></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </section>
+    </div>
+</div>
+<div ng-show="modalData == undefined">
+    <div class="loading-wrapper">
+        <i class="animate-spin icon-spin1"></i>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<div ng-if="results.data.length > 0">
+    <div id="resultsTbl" class="table table-striped">
+        <div class="book" ng-click="showDetails(item)" ng-repeat="item in results.data | orderBy:order">
+            <div class="book-image">
+                <img ng-if="item.labels!=undefined" ng-src="{{item.labels.medium}}"/>
+                <img ng-if="item.labels==undefined" ng-src="Build/Images/beer-default.png"/>
+            </div>
+            <div class="book-detail">
+                <span class="title">{{item.name}}</span>
+                <span ng-if="item.style!=undefined" class="author">{{item.style.category.name}}</span>
+            </div>
+            <div class="overlay"></div>
+        </div>
+    </div>
+    <div class="pagination">
+        <div paging page="0" page-size="80" total="results.totalItems" paging-action="changePage(page)"></div>
+    </div>
+</div>
+<div class="no-results" ng-if="results!='' && results.data == undefined">
+    <h3>No Results to display</h3>
+</div>

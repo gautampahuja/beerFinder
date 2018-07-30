@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="app">
+<head>
+    <title>Beer Finder</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- Resources -->
+    <link data-require="bootstrap-css@*" data-semver="3.0.3" rel="stylesheet"
+          href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css"/>
+    <link href="Build/Css/styles.min.css?v=1.2.3" rel="stylesheet"/>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <!--<base href="/">-->
+</head>
+<body data-ng-controller="BaseSearchCtrl as baseSearchCtrl">
+<header>
+    <div class="search-header">
+        <h1 class="search-header__headline">Welcome to the world of Beers</h1>
+
+        <h2 class="search-header__subheadline"></h2>
+        <search-input value="baseSearchCtrl.query" order-prop="baseSearchCtrl.orderProp"
+                      ng-model="baseSearchCtrl.results" class="search-form--red"></search-input>
+    </div>
+</header>
+<main data-ng-view class="reveal-animation"></main>
+<script id="Bundle" src="Build/Js/all.js?v=1.2.4" async></script>
+</body>
+</html>
