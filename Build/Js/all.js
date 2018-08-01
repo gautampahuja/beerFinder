@@ -464,15 +464,26 @@ angular.module("bw.paging",[]).directive("paging",function(){function a(a,b,c){a
 (function() {
     'use strict';
 
+    var appFilters = angular.module('app.filters', []);
+
+    appFilters.filter('sanitize', ['$sce', function($sce) {
+        return function(htmlCode) {
+            return $sce.trustAsHtml(htmlCode);
+        };
+    }]);
+}());
+
+(function() {
+    'use strict';
+
     var appServices = angular.module('app.services', []);
     appServices.factory('searchService', ['$http', '$q', function($http, $q) {
         var API_KEY = '34413dca2e90874d297dc41d77bb527a';
-        var BASE_URL = 'http://api.brewerydb.com/v2/';
+        var BASE_URL = 'https://api.brewerydb.com/v2/';
         var maxResults = 20;
         var modalData = null;
         var searchService = {
             searchBeers: searchBeers,
-            getBookDetails: getBookDetails,
             setData: setData,
             getData: getData
         };
@@ -483,24 +494,6 @@ angular.module("bw.paging",[]).directive("paging",function(){function a(a,b,c){a
 
         function getData() {
             return modalData;
-        }
-
-        function getBookDetails(id) {
-            var url = 'https://www.googleapis.com/books/v1/volumes/' + id;
-            var deferred = $q.defer();
-            $http({
-                url: url,
-                method: 'GET',
-                headers: {
-                    callback: 'JSON_CALLBACK',
-                    key: API_KEY
-                }
-            }).success(function(resp) {
-                deferred.resolve(resp);
-            }).error(function() {
-
-            });
-            return deferred.promise;
         }
 
         function searchBeers(query, startIndex) {
@@ -516,19 +509,3 @@ angular.module("bw.paging",[]).directive("paging",function(){function a(a,b,c){a
         return searchService;
     }]);
 }());
-
-(function() {
-    'use strict';
-
-    var appFilters = angular.module('app.filters', []);
-
-    appFilters.filter('sanitize', ['$sce', function($sce) {
-        return function(htmlCode) {
-            return $sce.trustAsHtml(htmlCode);
-        };
-    }]);
-}());
-
-angular.module("templates").run(["$templateCache", function($templateCache) {$templateCache.put("details.html","<div ng-if=\"modalData != undefined\">\n    <h1 class=\"heading--red\">{{modalData.name}}</h1>\n\n    <div class=\"main-content book-detail\">\n        <section class=\"row\">\n            <div class=\"col-10-md col-md-offset-2\">\n                <section class=\"row\">\n                    <div class=\"col-3-md\">\n                        <div class=\"book-image\">\n                            <img ng-if=\"modalData.labels!=undefined\" ng-src=\"{{modalData.labels.medium}}\"/>\n                            <img ng-if=\"modalData.labels==undefined\" ng-src=\"Build/Images/beer-default.png\"/>\n                        </div>\n                    </div>\n                    <div class=\"col-8-md\">\n                        <div class=\"book-container\">\n                            <div class=\"author-txt\">\n                                <span>{{details.volumeInfo.authors.join(\',\')}}</span>\n                            </div>\n                            <div class=\"Publication\">\n                                <span class=\"publication-txt\">{{details.volumeInfo.publisher}}, {{details.volumeInfo.publishedDate}}</span>\n                                <br/><br/>\n                                <span ng-if=\"details.volumeInfo.categories\" class=\"genre\"><b>Genre</b>: {{details.volumeInfo.categories.join(\',\')}}</span>\n                                <br/>\n                                <span class=\"pages\"><b>Pages</b>: {{details.volumeInfo.pageCount}}</span>\n                            </div>\n                            <div class=\"ratings\">\n                                <span class=\"ratings-txt\"></span>\n                            </div>\n                            <br/>\n\n                            <div ng-if=\"modalData.description\" class=\"description\">\n                                <h4>Description</h4>\n                                <span class=\"description-txt\" >{{modalData.description}}></span>\n                            </div>\n                        </div>\n                    </div>\n                </section>\n            </div>\n        </section>\n    </div>\n</div>\n<div ng-show=\"modalData == undefined\">\n    <div class=\"loading-wrapper\">\n        <i class=\"animate-spin icon-spin1\"></i>\n    </div>\n</div>");
-$templateCache.put("home.html","<div class=\"main-content\">\n    <section class=\"row input-container\">\n    </section>\n    <section class=\"row\">\n        <div class=\"col-12-md\">\n            <search-results-web order-prop=\"baseSearchCtrl.orderProp\"\n                                ng-model=\"baseSearchCtrl.results\"></search-results-web>\n        </div>\n    </section>\n</div>");
-$templateCache.put("search-results.html","<div ng-if=\"results.data.length > 0\">\n    <div id=\"resultsTbl\" class=\"table table-striped\">\n        <div class=\"book\" ng-click=\"showDetails(item)\" ng-repeat=\"item in results.data | orderBy:order\">\n            <div class=\"book-image\">\n                <img ng-if=\"item.labels!=undefined\" ng-src=\"{{item.labels.medium}}\"/>\n                <img ng-if=\"item.labels==undefined\" ng-src=\"Build/Images/beer-default.png\"/>\n            </div>\n            <div class=\"book-detail\">\n                <span class=\"title\">{{item.name}}</span>\n                <span ng-if=\"item.style!=undefined\" class=\"author\">{{item.style.category.name}}</span>\n            </div>\n            <div class=\"overlay\"></div>\n        </div>\n    </div>\n    <div class=\"pagination\">\n        <div paging page=\"0\" page-size=\"80\" total=\"results.totalItems\" paging-action=\"changePage(page)\"></div>\n    </div>\n</div>\n<div class=\"no-results\" ng-if=\"results!=\'\' && results.data == undefined\">\n    <h3>No Results to display</h3>\n</div>");}]);
